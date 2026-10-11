@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AutoValue | Car Price Prediction</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --bg: #0b1018;
+            --surface: #121c29;
+            --surface-light: #192638;
+            --border: #29384b;
+            --text: #f1f5f9;
+            --muted: #a1aec0;
+            --accent: #ff6538;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: var(--bg);
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        code {
+            color: #ffab91;
+        }
+
+        .navbar {
+            background: rgba(11, 16, 24, 0.97);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .navbar-brand:hover {
+            color: white;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: #cbd5e1 !important;
+            font-size: 0.92rem;
+        }
+
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+
+        .navbar-toggler {
+            border-color: var(--border);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .hero {
+            padding: 90px 0;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at 80% 35%,
+                    rgba(255, 101, 56, 0.13),
+                    transparent 35%
+                ),
+                linear-gradient(135deg, #121c29, #0b1018);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            margin-top: 18px;
+            font-size: clamp(2.7rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 1.08rem;
+        }
+
+        .hero-car {
+            color: var(--accent);
+            font-size: clamp(8rem, 18vw, 14rem);
+            filter: drop-shadow(0 15px 35px rgba(255, 101, 56, 0.2));
+        }
+
+        .btn-accent {
+            padding: 12px 22px;
+            color: white;
+            background: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 9px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .btn-accent:hover {
+            color: white;
+            background: #e95026;
+            border-color: #e95026;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-custom {
+            padding: 12px 22px;
+            color: white;
+            background: transparent;
+            border: 1px solid #64748b;
+            border-radius: 9px;
+            transition: 0.2s ease;
+        }
+
+        .btn-outline-custom:hover {
+            color: white;
+            border-color: var(--accent);
+            background: rgba(255, 101, 56, 0.08);
+        }
+
+        .hero-stat {
+            padding-left: 14px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 1.45rem;
+        }
+
+        .hero-stat span {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .section {
+            padding: 75px 0;
+        }
+
+        .section-heading {
+            margin-bottom: 14px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 850;
+            letter-spacing: -0.8px;
+        }
+
+        .section-description {
+            max-width: 760px;
+            margin-bottom: 35px;
+            color: var(--muted);
+        }
+
+        .panel,
+        .info-card,
+        .faq-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .panel {
+            padding: 28px;
+        }
+
+        .info-card {
+            height: 100%;
+            padding: 25px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .info-card:hover {
+            border-color: #ff653880;
+            transform: translateY(-4px);
+        }
+
+        .icon-box {
+            display: grid;
+            width: 46px;
+            height: 46px;
+            margin-bottom: 18px;
+            place-items: center;
+            color: var(--accent);
+            background: rgba(255, 101, 56, 0.12);
+            border-radius: 12px;
+            font-size: 1.4rem;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .technology-tag {
+            display: inline-block;
+            padding: 7px 12px;
+            color: #ffad94;
+            background: rgba(255, 101, 56, 0.1);
+            border: 1px solid rgba(255, 101, 56, 0.25);
+            border-radius: 7px;
+            font-size: 0.85rem;
+            font-weight: 650;
+        }
+
+        .dataset-table {
+            min-width: 650px;
+        }
+
+        .dataset-table th {
+            color: #ffab91;
+            background: var(--surface-light);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .dataset-table td {
+            color: #d0d9e5;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: var(--text);
+            --bs-table-border-color: var(--border);
+        }
+
+        .table-responsive {
+            border-radius: 10px;
+        }
+
+        .field-badge {
+            display: inline-block;
+            padding: 4px 9px;
+            color: #ffb39c;
+            background: rgba(255, 101, 56, 0.1);
+            border: 1px solid rgba(255, 101, 56, 0.22);
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .algorithm-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 27px;
+        }
+
+        .algorithm-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            display: grid;
+            flex: 0 0 38px;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            color: var(--accent);
+            background: rgba(255, 101, 56, 0.12);
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .algorithm-step h3 {
+            margin-bottom: 7px;
+            font-size: 1.02rem;
+            font-weight: 750;
+        }
+
+        .algorithm-step p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.91rem;
+        }
+
+        .parameter-table td:first-child {
+            color: var(--muted);
+        }
+
+        .parameter-table td:last-child {
+            text-align: right;
+            font-weight: 700;
+        }
+
+        .form-section {
+            padding-bottom: 28px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section:last-of-type {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .form-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .form-label {
+            margin-bottom: 7px;
+            color: #dce5ef;
+            font-size: 0.87rem;
+            font-weight: 650;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            min-width: 0;
+            min-height: 45px;
+            padding: 10px 12px;
+            color: var(--text);
+            background-color: #0c1420;
+            border: 1px solid #35445a;
+            border-radius: 8px;
+        }
+
+        .form-control::placeholder {
+            color: #718198;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            color: white;
+            background-color: #0c1420;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 101, 56, 0.12);
+        }
+
+        .form-select option {
+            color: white;
+            background: #0c1420;
+        }
+
+        .form-text {
+            color: var(--muted);
+            font-size: 0.81rem;
+        }
+
+        .result-panel {
+            padding: 28px;
+            margin-bottom: 25px;
+            background: linear-gradient(120deg, #2b211f, #152232);
+            border: 1px solid rgba(255, 101, 56, 0.45);
+            border-radius: 14px;
+        }
+
+        .result-price {
+            margin: 10px 0;
+            color: var(--accent);
+            font-size: clamp(2rem, 6vw, 3.3rem);
+            font-weight: 900;
+            overflow-wrap: anywhere;
+        }
+
+        .faq-item {
+            margin-bottom: 13px;
+            padding: 19px 21px;
+        }
+
+        .faq-item summary {
+            cursor: pointer;
+            font-weight: 750;
+            list-style: none;
+        }
+
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-item summary::after {
+            float: right;
+            margin-left: 12px;
+            color: var(--accent);
+            content: "+";
+            font-size: 1.2rem;
+        }
+
+        .faq-item[open] summary::after {
+            content: "−";
+        }
+
+        .faq-item p {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        footer {
+            padding: 28px 0;
+            background: #080d14;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        @media (max-width: 767px) {
+            .hero {
+                padding: 60px 0;
+            }
+
+            .hero h1 {
+                letter-spacing: -1px;
+            }
+
+            .hero-car {
+                font-size: 8rem;
+            }
+
+            .section {
+                padding: 55px 0;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="bi bi-speedometer2 accent me-2"></i>
+                AutoValue<span class="accent">.</span>
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <div class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                    <a class="nav-link" href="#about">About</a>
+                    <a class="nav-link" href="#dataset">Dataset</a>
+                    <a class="nav-link" href="#algorithm">Algorithm</a>
+                    <a class="nav-link" href="#predict">Predict Price</a>
+                    <a class="nav-link" href="#faq">FAQs</a>
+
+                    <a href="#predict" class="btn btn-accent btn-sm mt-2 mt-lg-0">
+                        Try Predictor
+                        <i class="bi bi-arrow-up-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero" id="home">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <div class="eyebrow">
+                        <i class="bi bi-cpu me-2"></i>
+                        Machine Learning · Regression
+                    </div>
+
+                    <h1>
+                        Understand Your Car's
+                        <span>Estimated Value.</span>
+                    </h1>
+
+                    <p class="hero-description mt-4 mb-4">
+                        Discover how vehicle specifications can be used to
+                        estimate a car's price with machine learning.
+                        Enter your car details and explore a data-driven
+                        prediction.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#predict" class="btn btn-accent">
+                            <i class="bi bi-calculator me-2"></i>
+                            Predict Car Price
+                        </a>
+
+                        <a href="#algorithm" class="btn btn-outline-custom">
+                            Explore the Model
+                        </a>
+                    </div>
+
+                    <div class="row g-4 mt-4">
+                        <div class="col-4">
+                            <div class="hero-stat">
+                                <strong>16</strong>
+                                <span>Input Features</span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="hero-stat">
+                                <strong>SVR</strong>
+                                <span>ML Algorithm</span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="hero-stat">
+                                <strong>26</strong>
+                                <span>Dataset Columns</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 text-center">
+                    <i class="bi bi-car-front-fill hero-car"></i>
+                    <div class="eyebrow mt-3">
+                        Driven by Data
+                    </div>
+                    <p class="muted mt-2">
+                        Vehicle specifications. Machine learning. Price estimation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="eyebrow mb-2">Project Overview</div>
+
+            <h2 class="section-heading">
+                A Data-Driven Approach to Car Pricing
+            </h2>
+
+            <p class="section-description">
+                AutoValue is a machine learning web application that predicts
+                a vehicle's estimated price from its technical and
+                performance characteristics.
+            </p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="icon-box">
+                            <i class="bi bi-bullseye"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">Project Objective</h3>
+
+                        <p class="muted mb-0">
+                            Train a regression model to learn relationships
+                            between car specifications and historical prices.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="icon-box">
+                            <i class="bi bi-database-check"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">Dataset Processing</h3>
+
+                        <p class="muted mb-0">
+                            Handle missing values, scale numerical features
+                            and encode categorical features before training.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="icon-box">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">Price Prediction</h3>
+
+                        <p class="muted mb-0">
+                            Submit vehicle specifications through a form and
+                            obtain an estimated price from the saved model.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel mt-4">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <h3 class="h5 fw-bold mb-3">How It Works</h3>
+
+                        <p class="muted mb-0">
+                            The application sends your inputs to a trained
+                            Support Vector Regression pipeline. The pipeline
+                            preprocesses the values and predicts the price
+                            using patterns learned from <code>data.csv</code>.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h3 class="h5 fw-bold mb-3">Technology Stack</h3>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="technology-tag">Python</span>
+                            <span class="technology-tag">Flask</span>
+                            <span class="technology-tag">Pandas</span>
+                            <span class="technology-tag">Scikit-learn</span>
+                            <span class="technology-tag">SVR</span>
+                            <span class="technology-tag">Joblib</span>
+                            <span class="technology-tag">Bootstrap 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dataset -->
+    <section class="section pt-0" id="dataset">
+        <div class="container">
+            <div class="eyebrow mb-2">Data Dictionary</div>
+
+            <h2 class="section-heading">Explore the Dataset</h2>
+
+            <p class="section-description">
+                The supplied dataset has 26 columns. The model uses 16 input
+                features and predicts the <code>price</code> target. The
+                remaining columns are not directly used by this model.
+            </p>
+
+            <div class="panel">
+                <div class="table-responsive">
+                    <table class="table table-bordered dataset-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                                <th>Model Usage</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>car_ID</td>
+                                <td>Vehicle record identifier</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>symboling</td>
+                                <td>Insurance risk rating</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>CarName</td>
+                                <td>Vehicle make and model name</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>fueltype</td>
+                                <td>Fuel type, such as gas or diesel</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>aspiration</td>
+                                <td>Standard or turbo aspiration</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>doornumber</td>
+                                <td>Number of doors</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>carbody</td>
+                                <td>Body style, such as sedan or hatchback</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>drivewheel</td>
+                                <td>Front, rear or four-wheel drive</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>enginelocation</td>
+                                <td>Engine location</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>wheelbase</td>
+                                <td>Distance between the front and rear axles</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>carlength</td>
+                                <td>Overall vehicle length</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>carwidth</td>
+                                <td>Overall vehicle width</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>carheight</td>
+                                <td>Overall vehicle height</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>curbweight</td>
+                                <td>Vehicle weight without passengers or cargo</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>enginetype</td>
+                                <td>Engine configuration or type</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>cylindernumber</td>
+                                <td>Number of engine cylinders</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>enginesize</td>
+                                <td>Engine displacement size</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>fuelsystem</td>
+                                <td>Fuel delivery system</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>boreratio</td>
+                                <td>Engine cylinder bore ratio</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>stroke</td>
+                                <td>Engine piston stroke measurement</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>compressionratio</td>
+                                <td>Engine compression ratio</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>horsepower</td>
+                                <td>Engine power output</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>peakrpm</td>
+                                <td>Engine speed at peak power</td>
+                                <td>Not used</td>
+                            </tr>
+                            <tr>
+                                <td>citympg</td>
+                                <td>Fuel economy in city driving</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>highwaympg</td>
+                                <td>Fuel economy on highways</td>
+                                <td><span class="field-badge">Input</span></td>
+                            </tr>
+                            <tr>
+                                <td>price</td>
+                                <td>Historical vehicle price</td>
+                                <td><span class="field-badge">Target</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="muted small mt-3 mb-0">
+                    The predicted price uses the same currency and units as
+                    the dataset's <code>price</code> column. The application
+                    does not convert the value to INR automatically.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithm -->
+    <section class="section pt-0" id="algorithm">
+        <div class="container">
+            <div class="eyebrow mb-2">Machine Learning</div>
+
+            <h2 class="section-heading">Support Vector Regression</h2>
+
+            <p class="section-description">
+                Support Vector Regression (SVR) is a supervised learning
+                algorithm for predicting continuous values. This project
+                uses an RBF kernel to model nonlinear relationships between
+                vehicle specifications and price.
+            </p>
+
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-7">
+                    <div class="panel">
+                        <div class="algorithm-step">
+                            <div class="step-number">01</div>
+                            <div>
+                                <h3>Feature Selection</h3>
+                                <p>
+                                    Select 16 columns that describe vehicle
+                                    risk rating, fuel, body, drivetrain,
+                                    dimensions, engine characteristics and
+                                    fuel economy.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <div class="step-number">02</div>
+                            <div>
+                                <h3>Missing-Value Imputation</h3>
+                                <p>
+                                    SimpleImputer fills missing numerical
+                                    values with the median and categorical
+                                    values with the most frequent category.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <div class="step-number">03</div>
+                            <div>
+                                <h3>Numerical Feature Scaling</h3>
+                                <p>
+                                    StandardScaler transforms numerical
+                                    values using statistics learned from
+                                    the training data. This is important
+                                    because SVR uses distances between
+                                    transformed observations.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <div class="step-number">04</div>
+                            <div>
+                                <h3>One-Hot Encoding</h3>
+                                <p>
+                                    OneHotEncoder converts categories such
+                                    as fuel type, car body and engine type
+                                    into numeric indicators. Unknown
+                                    categories are ignored during prediction.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <div class="step-number">05</div>
+                            <div>
+                                <h3>RBF Kernel</h3>
+                                <p>
+                                    The Radial Basis Function kernel allows
+                                    SVR to model nonlinear relationships.
+                                    It calculates similarities between
+                                    observations in the transformed feature
+                                    space.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="algorithm-step">
+                            <div class="step-number">06</div>
+                            <div>
+                                <h3>Evaluation and Training</h3>
+                                <p>
+                                    The script evaluates a train/test split
+                                    using MAE and R², then fits the final
+                                    pipeline on all valid records and saves
+                                    it to <code>car_price_model.pkl</code>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="panel mb-4">
+                        <div class="icon-box">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold mb-3">Model Configuration</h3>
+
+                        <div class="table-responsive">
+                            <table class="table parameter-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Algorithm</td>
+                                        <td>SVR</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kernel</td>
+                                        <td>RBF</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Regularization (C)</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Epsilon</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Test Size</td>
+                                        <td>20%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Random State</td>
+                                        <td>42</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel mb-4">
+                        <div class="icon-box">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">Evaluation Metrics</h3>
+
+                        <p class="muted">
+                            <strong class="text-light">Mean Absolute Error (MAE)</strong>
+                            measures the average absolute difference
+                            between actual and predicted prices. Lower
+                            values indicate smaller errors.
+                        </p>
+
+                        <p class="muted mb-0">
+                            <strong class="text-light">R² Score</strong>
+                            measures how well predictions explain the
+                            variation in the target. A value closer to 1
+                            is generally desirable, although negative
+                            values are possible.
+                        </p>
+                    </div>
+
+                    <div class="panel">
+                        <div class="icon-box">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">Why Use an RBF Kernel?</h3>
+
+                        <p class="muted mb-0">
+                            Car prices do not always change linearly with
+                            engine size, weight, horsepower and fuel economy.
+                            The RBF kernel helps the model learn more complex
+                            relationships than a simple linear regression.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel mt-4">
+                <h3 class="h6 fw-bold">Understanding the Parameters</h3>
+
+                <p class="muted mb-0">
+                    <code>C=100</code> controls the penalty associated with
+                    errors outside the epsilon margin.
+                    <code>epsilon=0.1</code> defines the margin in the
+                    target's price units. These values are fixed in the
+                    current implementation; they have not necessarily
+                    been optimized for the dataset.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prediction -->
+    <section class="section pt-0" id="predict">
+        <div class="container">
+            <div class="eyebrow mb-2">Interactive Predictor</div>
+
+            <h2 class="section-heading">Predict Your Car's Price</h2>
+
+            <p class="section-description">
+                Enter all the required vehicle specifications below.
+                The form uses the same 16 features as your trained model.
+            </p>
+
+            {% if prediction is not none %}
+                <div class="result-panel">
+                    <div class="eyebrow">Prediction Complete</div>
+
+                    <h3 class="h5 fw-bold mt-2">Estimated Car Price</h3>
+
+                    <div class="result-price">
+                        {{ "{:,.2f}".format(prediction) }}
+                    </div>
+
+                    <p class="muted mb-0">
+                        This is a model-generated estimate, not a guaranteed
+                        market price. The units match your source dataset.
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form
+                action="{{ url_for('predict') }}"
+                method="POST"
+                class="panel"
+            >
+                <!-- Vehicle Configuration -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-car-front accent"></i>
+                        Vehicle Configuration
+                    </h3>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="symboling" class="form-label">
+                                Symboling
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="symboling"
+                                name="symboling"
+                                step="1"
+                                value="{{ submitted.get('symboling', '0') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="fueltype" class="form-label">
+                                Fuel Type
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="fueltype"
+                                name="fueltype"
+                                required
+                            >
+                                {% for value in ['gas', 'diesel'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('fueltype') == value %}selected{% endif %}
+                                    >
+                                        {{ value|capitalize }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="aspiration" class="form-label">
+                                Aspiration
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="aspiration"
+                                name="aspiration"
+                                required
+                            >
+                                {% for value in ['std', 'turbo'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('aspiration') == value %}selected{% endif %}
+                                    >
+                                        {{ 'Standard' if value == 'std' else 'Turbo' }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="carbody" class="form-label">
+                                Car Body
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="carbody"
+                                name="carbody"
+                                required
+                            >
+                                {% for value in ['convertible', 'hardtop', 'hatchback', 'sedan', 'wagon'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('carbody') == value %}selected{% endif %}
+                                    >
+                                        {{ value|capitalize }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="drivewheel" class="form-label">
+                                Drive Wheel
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="drivewheel"
+                                name="drivewheel"
+                                required
+                            >
+                                {% for value in ['fwd', 'rwd', '4wd'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('drivewheel') == value %}selected{% endif %}
+                                    >
+                                        {% if value == 'fwd' %}
+                                            Front-wheel drive (FWD)
+                                        {% elif value == 'rwd' %}
+                                            Rear-wheel drive (RWD)
+                                        {% else %}
+                                            Four-wheel drive (4WD)
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dimensions -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-rulers accent"></i>
+                        Dimensions and Weight
+                    </h3>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="wheelbase" class="form-label">
+                                Wheelbase
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="wheelbase"
+                                name="wheelbase"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 94.5"
+                                value="{{ submitted.get('wheelbase', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="carlength" class="form-label">
+                                Car Length
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="carlength"
+                                name="carlength"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 171.2"
+                                value="{{ submitted.get('carlength', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="carwidth" class="form-label">
+                                Car Width
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="carwidth"
+                                name="carwidth"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 65.5"
+                                value="{{ submitted.get('carwidth', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="curbweight" class="form-label">
+                                Curb Weight
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="curbweight"
+                                name="curbweight"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 2548"
+                                value="{{ submitted.get('curbweight', '') }}"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engine -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-gear-wide-connected accent"></i>
+                        Engine Specifications
+                    </h3>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="enginetype" class="form-label">
+                                Engine Type
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="enginetype"
+                                name="enginetype"
+                                required
+                            >
+                                {% for value in ['dohc', 'dohcv', 'l', 'ohc', 'ohcf', 'ohcv', 'rotor'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('enginetype') == value %}selected{% endif %}
+                                    >
+                                        {{ value|upper }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="cylindernumber" class="form-label">
+                                Cylinder Number
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="cylindernumber"
+                                name="cylindernumber"
+                                required
+                            >
+                                {% for value in ['two', 'three', 'four', 'five', 'six', 'eight', 'twelve'] %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if submitted.get('cylindernumber') == value %}selected{% endif %}
+                                    >
+                                        {{ value|capitalize }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="enginesize" class="form-label">
+                                Engine Size
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="enginesize"
+                                name="enginesize"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 130"
+                                value="{{ submitted.get('enginesize', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="boreratio" class="form-label">
+                                Bore Ratio
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="boreratio"
+                                name="boreratio"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 3.47"
+                                value="{{ submitted.get('boreratio', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label for="horsepower" class="form-label">
+                                Horsepower
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="horsepower"
+                                name="horsepower"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 111"
+                                value="{{ submitted.get('horsepower', '') }}"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fuel Economy -->
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="bi bi-fuel-pump accent"></i>
+                        Fuel Economy
+                    </h3>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="citympg" class="form-label">
+                                City MPG
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="citympg"
+                                name="citympg"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 21"
+                                value="{{ submitted.get('citympg', '') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="highwaympg" class="form-label">
+                                Highway MPG
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="highwaympg"
+                                name="highwaympg"
+                                step="any"
+                                min="0"
+                                placeholder="e.g. 27"
+                                value="{{ submitted.get('highwaympg', '') }}"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex flex-wrap gap-3">
+                    <button type="submit" class="btn btn-accent">
+                        <i class="bi bi-cpu me-2"></i>
+                        Predict Car Price
+                    </button>
+
+                    <button type="reset" class="btn btn-outline-custom">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>
+                        Clear Form
+                    </button>
+                </div>
+
+                <p class="form-text mt-3 mb-0">
+                    Prediction accuracy depends on the quality of the
+                    training dataset and the values you enter.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- FAQs -->
+    <section class="section pt-0" id="faq">
+        <div class="container">
+            <div class="eyebrow mb-2">Frequently Asked Questions</div>
+
+            <h2 class="section-heading">Questions About AutoValue</h2>
+
+            <p class="section-description">
+                Learn more about the prediction process, algorithm and
+                limitations of this project.
+            </p>
+
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <details class="faq-item">
+                        <summary>What is Support Vector Regression?</summary>
+                        <p>
+                            SVR is a supervised machine learning algorithm
+                            that predicts continuous numerical values.
+                            It attempts to fit predictions within a chosen
+                            error margin while controlling model complexity.
+                        </p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>Why is feature scaling important?</summary>
+                        <p>
+                            Numerical features use different scales.
+                            StandardScaler transforms them using training
+                            statistics, which helps the RBF kernel compare
+                            observations more appropriately.
+                        </p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>Is the predicted price guaranteed?</summary>
+                        <p>
+                            No. The result is a statistical estimate learned
+                            from historical data. It is not a live market
+                            quote or a guaranteed selling price.
+                        </p>
+                    </details>
+                </div>
+
+                <div class="col-lg-6">
+                    <details class="faq-item">
+                        <summary>Which features does the model use?</summary>
+                        <p>
+                            Symboling, fueltype, aspiration, carbody,
+                            drivewheel, wheelbase, carlength, carwidth,
+                            curbweight, enginetype, cylindernumber,
+                            enginesize, boreratio, horsepower, citympg
+                            and highwaympg.
+                        </p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>What if I select an unseen category?</summary>
+                        <p>
+                            OneHotEncoder is configured to ignore unknown
+                            categories. However, predictions for categories
+                            not represented during training may be less
+                            reliable.
+                        </p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>How can the model be improved?</summary>
+                        <p>
+                            Use representative data, tune SVR parameters
+                            with cross-validation, compare alternative
+                            regression algorithms and evaluate results
+                            on data that was not used for training.
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6">
+                    <strong>
+                        <i class="bi bi-speedometer2 accent me-2"></i>
+                        AutoValue.
+                    </strong>
+                    <span class="ms-2">Car Price Prediction System</span>
+                </div>
+
+                <div class="col-md-6 text-md-end">
+                    &copy; 2026 AutoValue. All rights reserved.
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                Built with <i class="bi bi-heart-fill accent"></i>
+                and Machine Learning
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
